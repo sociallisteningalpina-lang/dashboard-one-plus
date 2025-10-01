@@ -37,12 +37,20 @@ def run_report_generation():
     # <<<--- AQUÍ ESTÁ LA LÓGICA DE TEMAS DE "SUPERIORIDAD LÁCTEA" INTEGRADA ---<<<
     def classify_topic(comment):
         comment_lower = str(comment).lower()
-        if re.search(r'\bia\b|inteligencia artificial|prompts', comment_lower): return 'Críticas a la IA'
-        if re.search(r'artista|diseñador|animador|contratar|pagar', comment_lower): return 'Apoyo a Artistas'
-        if re.search(r'marketing|marca|audiencia|jefazos', comment_lower): return 'Estrategia de Marketing'
-        if re.search(r'bonito|lindo|divino|horrible|feo|calidad|barato', comment_lower): return 'Calidad del Contenido'
-        if re.search(r'alquería|pureza|competencia', comment_lower): return 'Mención a Competencia'
-        return 'Otros'
+        # Busca críticas directas sobre la salud o ingredientes
+        if re.search(r'azúcar|grasa|saturada|exceso|bayter|mierda|malo|daño|🥴', comment_lower):
+            return 'Crítica de Salud'
+        # Identifica comentarios con connotación religiosa o de gratitud
+        if re.search(r'amén|amen|dios|señor|bendicion|gracias|🙏|código sagrado', comment_lower):
+            return 'Religioso / Espiritual'
+        # Captura comentarios positivos sobre disfrutar la vida o el producto
+        if re.search(r'vida|feliz|rico|viaje|disfrutar|🌹|👍|😍', comment_lower):
+            return 'Sentimiento Positivo / Estilo de Vida'
+        # Identifica preguntas directas
+        if re.search(r'dónde|cuándo|cómo|qué|cuál|precio|\?', comment_lower):
+            return 'Pregunta'
+        # Si no coincide con ninguna categoría anterior, se considera "Otros"
+        return 'Otros / Aleatorio'
     
     df['tema'] = df['comment_text'].apply(classify_topic)
     print("Análisis completado.")
@@ -277,3 +285,4 @@ def run_report_generation():
 
 if __name__ == "__main__":
     run_report_generation()
+
