@@ -32,7 +32,11 @@ URLS_A_PROCESAR = [
     "https://www.instagram.com/p/DOekIASjMIz/#advertiser",
     "https://www.facebook.com/100064867445065/posts/1217600013745569/?dco_ad_token=AaoF89IFxE22tlbNX0I7jV7QlNZtp-TRp0V3C8Kboi6KvJj3uKPtSlgRZ1HV_nLUCdJ6lpAAZdbbbA7x&dco_ad_id=120231960561750767",
     "https://www.instagram.com/p/DOemgJYDMpG/#advertiser",
-    "https://www.facebook.com/100064867445065/posts/1217618253743745/?dco_ad_token=Aar6YkXNqqjfbtdLljovvAcbZ2pPFcu_oNBLy_eA0ELHW06fzdym-vbpBhzARthhL-LcPhDssUZTbBmc&dco_ad_id=120231961430560767"
+    "https://www.facebook.com/100064867445065/posts/1217618253743745/?dco_ad_token=Aar6YkXNqqjfbtdLljovvAcbZ2pPFcu_oNBLy_eA0ELHW06fzdym-vbpBhzARthhL-LcPhDssUZTbBmc&dco_ad_id=120231961430560767",
+    "https://www.instagram.com/p/DPHbZ51jBH_/#advertiser",
+    "https://www.facebook.com/100064867445065/posts/1231508129021424/",
+    "https://www.instagram.com/p/DPHW-YyjJlv/#advertiser",
+    "https://www.facebook.com/100064867445065/posts/1231479782357592/?dco_ad_token=AaodirgHyfjdrRtg5kbM2UKuwTLaktdQ0eZi1UcYqEqYVNmBNKrkN8I9cMgqskgOxr_VQDBovS29M4Dl&dco_ad_id=120232625186890767"
 ]
 
 # INFORMACIÓN DE CAMPAÑA
@@ -253,6 +257,7 @@ def run_extraction():
 
 if __name__ == "__main__":
     run_extraction()
+
 
 
 
