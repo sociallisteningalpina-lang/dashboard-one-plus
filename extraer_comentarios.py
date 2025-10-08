@@ -36,7 +36,8 @@ URLS_A_PROCESAR = [
     "https://www.instagram.com/p/DPHbZ51jBH_/#advertiser",
     "https://www.facebook.com/100064867445065/posts/1231508129021424/",
     "https://www.instagram.com/p/DPHW-YyjJlv/#advertiser",
-    "https://www.facebook.com/100064867445065/posts/1231479782357592/?dco_ad_token=AaodirgHyfjdrRtg5kbM2UKuwTLaktdQ0eZi1UcYqEqYVNmBNKrkN8I9cMgqskgOxr_VQDBovS29M4Dl&dco_ad_id=120232625186890767"
+    "https://www.facebook.com/100064867445065/posts/1231479782357592/?dco_ad_token=AaodirgHyfjdrRtg5kbM2UKuwTLaktdQ0eZi1UcYqEqYVNmBNKrkN8I9cMgqskgOxr_VQDBovS29M4Dl&dco_ad_id=120232625186890767",
+    "https://web.facebook.com/100064867445065/posts/1229679052537665/?dco_ad_token=Aaqetf784RumLkbscgHZXNSRF0TZIO9n2Vt1_9uwZO6mpYTzysZ_WfEF3CH19-WBugGRBO39K-5V4ma7&dco_ad_id=120232527495410767&_rdc=1&_rdr#"
 ]
 
 # INFORMACIÓN DE CAMPAÑA
@@ -257,6 +258,7 @@ def run_extraction():
 
 if __name__ == "__main__":
     run_extraction()
+
 
 
 
