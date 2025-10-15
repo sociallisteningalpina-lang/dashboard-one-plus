@@ -62,7 +62,7 @@ def run_report_generation():
     
     # <<<--- FUNCIÓN DE CLASIFICACIÓN (sin cambios) ---<<<
     
-    def classify_topic_plus1(comment):
+    def classify_topic(comment):
         """
         Clasifica un comentario de la campaña "Plus 1" en categorías específicas
         basadas en las reacciones y temas predominantes observados.
@@ -406,5 +406,6 @@ def run_report_generation():
 
 if __name__ == "__main__":
     run_report_generation()
+
 
 
