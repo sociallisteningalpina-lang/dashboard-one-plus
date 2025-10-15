@@ -30,7 +30,7 @@ jobs:
           pip install -r requirements.txt
 
       # Paso 4 (DEBUG - Opcional, pero útil): Verifica que el Excel es el correcto
-      - name: 'DEBUG: Verificar qué archivos y commits ve el robot'
+      - name: '4. DEBUG: Verificar qué archivos y commits ve el robot'
         run: |
           echo "--- 1. Mostrando el commit que se está usando ---"
           git log -n 1
@@ -43,9 +43,18 @@ jobs:
       - name: 5. Ejecutar SÓLO la generación del informe
         run: python generar_informe.py
 
-      # --- AÑADIDO: ¡Este es el paso clave que faltaba! ---
-      # Paso 6: Sube el nuevo index.html al repositorio
-      - name: 6. Subir los archivos actualizados al repositorio
+      # ====================================================================
+      # PASO DE DIAGNÓSTICO AÑADIDO: Revisa la salida de este paso en "Actions"
+      # ====================================================================
+      - name: '6. DEBUG: Verificar si Git detecta cambios'
+        run: |
+          echo "--- Revisando el estado con 'git status' ---"
+          git status
+          echo "--- Mostrando las diferencias exactas en index.html ---"
+          git diff index.html
+
+      # Paso 7: Sube el nuevo index.html al repositorio
+      - name: 7. Subir los archivos actualizados al repositorio
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
