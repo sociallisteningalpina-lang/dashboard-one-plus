@@ -62,60 +62,59 @@ def run_report_generation():
     
     # <<<--- FUNCIÓN DE CLASIFICACIÓN (sin cambios) ---<<<
     
-    def classify_topic(comment):
+    def classify_topic_plus1(comment):
         """
-        Clasifica un comentario en categorías más específicas basadas en una lista
-        extendida de temas y palabras clave.
+        Clasifica un comentario de la campaña "Plus 1" en categorías específicas
+        basadas en las reacciones y temas predominantes observados.
         """
         comment_lower = str(comment).lower()
     
-        # --- CATEGORÍAS DE CRÍTICA ---
+        # --- CATEGORÍAS DE CRÍTICA (Las más recurrentes) ---
     
-        # 1. Crítica fuerte al uso de IA y falta de apoyo a artistas. Es el tema más recurrente.
-        if re.search(r'\bia\b|inteligencia artificial|animador|artista|diseñador|pagar|contratar|presupuesto|tacaños|ahorrar|flojera|pereza|barato', comment_lower):
-            return 'Crítica: Uso de IA / Falta de apoyo a artistas'
+        # 1. Crítica con lenguaje homofóbico o discriminatorio. Es el tema más frecuente.
+        if re.search(r'maricon|mk|rarito|muerde almohada|locas|asco|degenerado|cochino|dos hombres|culiflojo|no jodan|patos|cacorros|gay|🏳️‍🌈', comment_lower):
+            return 'Crítica: Contenido del Anuncio (LGTBIfobia)'
     
-        # 2. Crítica a la calidad, precio o ingredientes del producto.
-        if re.search(r'caro|azúcar|agua|calidad del producto|químico|artificial son los nutriente', comment_lower):
-            return 'Crítica: Calidad o Precio del Producto'
+        # 2. Crítica general a la calidad o creatividad de la publicidad.
+        if re.search(r'peor comercial|peor publicidad|invierta mejor|asquito|busquen oficio|ridículos|marketing.*cagasten|no me gusto', comment_lower):
+            return 'Crítica: Calidad de la Publicidad'
     
-        # 3. Crítica a la veracidad del anuncio (ej. el del señor mayor).
-        if re.search(r'mentiroso|embustero|ese tiempo no existía|no avía esa marca|dudo mucho', comment_lower):
-            return 'Crítica: Contenido del Anuncio (Veracidad)'
-    
-        # 4. Mención directa a la competencia de forma comparativa o como alternativa.
-        if re.search(r'alquería|pureza|competencia', comment_lower):
-            return 'Mención a Competencia'
-    
-        # 5. Críticas sobre las prácticas laborales de la empresa.
-        if re.search(r'empleado|cooperativas|liquidaciones|negreros', comment_lower):
-            return 'Crítica: Prácticas Laborales'
-    
-        # --- CATEGORÍAS POSITIVAS Y NEUTRAS ---
-    
-        # 6. Comentarios positivos sobre la marca, la campaña o los productos.
-        if re.search(r'bonito|lindo|divino|me encanta|excelente|amo|deliciosa|gran producto|buenos', comment_lower):
-            return 'Comentario Positivo / Apoyo a la Marca'
-    
-        # 7. Sugerencias o peticiones directas de productos.
-        if re.search(r'mochis|yox sin azúcar|vender sus productos', comment_lower):
-            return 'Sugerencia de Producto'
+        # 3. Crítica desde una perspectiva moral o religiosa.
+        if re.search(r'dios|señor|isaías|amén|bendiciones|pecado|satanás|cristo|identidad|familia', comment_lower) and len(comment.split()) > 5:
+            return 'Crítica: Objeción Moral / Religiosa'
             
-        # --- CATEGORÍAS DE BAJA INTERACCIÓN O SPAM ---
+        # 4. Crítica a los ingredientes, especialmente el azúcar.
+        if re.search(r'azúcar|etiquetas negras|tóxico|salud|químico', comment_lower):
+            return 'Crítica: Producto (Salud/Ingredientes)'
     
-        # 8. Detecta spam claro o comentarios irrelevantes.
-        if re.search(r'contraseña de cualquier red wi-fi|gog6', comment_lower):
-            return 'Spam'
+        # --- CATEGORÍAS DE APOYO O POSITIVAS ---
     
-        # 9. Comentarios muy cortos, emojis sueltos o saludos que no aportan un tema claro.
-        if len(comment.split()) < 3 and not re.search(r'[a-zA-Z]', comment_lower):
+        # 5. Apoyo explícito a la campaña por su inclusión o mensaje.
+        if re.search(r'excelente|buenísimo|espectacular|felicitaciones|empezare a tomar mas|me encanta|gran campaña|la rompen|genial', comment_lower):
+            return 'Apoyo: Campaña / Inclusión'
+            
+        # 6. Comentarios positivos sobre el producto o la marca en general.
+        if re.search(r'delicia|deliciosa|rico|amo|me encanta|gran producto|preferida', comment_lower):
+            return 'Comentario Positivo: Producto / Marca'
+    
+        # 7. Mención a combinaciones de producto, alineado con el objetivo de la campaña "Plus 1".
+        if re.search(r'con éso|melocoton y chocorramo|con la lechuga|hacemos lo mismo', comment_lower):
+            return 'Mención de Combinaciones / "Plus 1"'
+            
+        # --- OTRAS CATEGORÍAS ---
+    
+        # 8. Comentarios no relacionados con la campaña, a menudo de índole política o personal.
+        if re.search(r'uribe|petro|polo poli|bandido', comment_lower):
+            return 'Comentario No Relacionado / Político'
+            
+        # 9. Comentarios muy cortos, emojis, saludos o risas que no aportan un tema claro.
+        # Se considera corto si tiene 3 palabras o menos, o si son solo emojis/símbolos.
+        if len(comment.split()) <= 3 or not re.search(r'[a-z]', comment_lower):
             return 'Interacción General (Emojis/Corto)'
-    
-        # --- CATEGORÍA GENERAL ---
     
         # 10. Si no coincide con ninguna de las categorías anteriores.
         return 'Otro'
-        
+            
     # <<<--- TERMINA LA NUEVA FUNCIÓN DE CLASIFICACIÓN ---<<<
 
     df_comments['tema'] = df_comments['comment_text'].apply(classify_topic)
@@ -407,4 +406,5 @@ def run_report_generation():
 
 if __name__ == "__main__":
     run_report_generation()
+
 
