@@ -96,6 +96,19 @@ URLS_A_PROCESAR = [
     "https://www.instagram.com/p/DPrJUk_DFiM/",
     "https://www.instagram.com/p/DPrJURUDACm/",
     "https://www.instagram.com/p/DPzKNF0DIqm/"
+    # --- Facebook URLs Faltantes ---
+    "https://www.facebook.com/100064867445065/posts/1139081728264065/",
+    "https://www.facebook.com/100064867445065/posts/1136206128551625/",
+    "https://www.facebook.com/100064867445065/posts/1159592922879612/",
+    "https://www.facebook.com/100064867445065/posts/1159593356212902/",
+    "https://www.facebook.com/100064867445065/posts/1159593509546220/",
+    "https://www.facebook.com/100064867445065/posts/1159593362879568/",
+    # --- Instagram URLs Faltantes ---
+    "https://www.instagram.com/p/DKiPruOA4FL/",
+    "https://www.instagram.com/p/DLsjOfCAwZJ/",
+    "https://www.instagram.com/p/DLsjNd8AM3R/",
+    "https://www.instagram.com/p/DLsjPVcgnt6/",
+    "https://www.instagram.com/p/DLsjNViAcFf/"
 ]
 
 # INFORMACIÓN DE CAMPAÑA
@@ -316,6 +329,7 @@ def run_extraction():
 
 if __name__ == "__main__":
     run_extraction()
+
 
 
 
