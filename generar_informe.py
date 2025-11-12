@@ -63,9 +63,6 @@ def run_report_generation():
             sentiment_analyzer.predict(str(text)).output, "Neutro"
         )
     )
-    
-    import re
-import pandas as pd
 
 def classify_topic(comment):
     """
@@ -598,6 +595,7 @@ def classify_topic(comment):
 
 if __name__ == "__main__":
     run_report_generation()
+
 
 
 
