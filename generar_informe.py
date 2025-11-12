@@ -4,75 +4,12 @@ import os
 import re
 import json
 
-def run_report_generation():
-    """
-    Lee los datos del Excel, realiza el análisis de sentimientos y temas,
-    y genera el panel HTML interactivo como 'index.html'.
-    """
-    print("--- INICIANDO GENERACIÓN DE INFORME HTML ---")
-    
-    try:
-        df = pd.read_excel('Comentarios Campaña.xlsx')
-        print("Archivo 'Comentarios Campaña.xlsx' cargado con éxito.")
-    except FileNotFoundError:
-        print("❌ ERROR: No se encontró el archivo 'Comentarios Campaña.xlsx'.")
-        return
-
-    # --- Limpieza y preparación de datos ---
-    df['created_time_processed'] = pd.to_datetime(df['created_time_processed'])
-    df['created_time_colombia'] = df['created_time_processed'] - pd.Timedelta(hours=5)
-
-    # Asegurar que exista post_url_original (para archivos antiguos)
-    if 'post_url_original' not in df.columns:
-        print("⚠️  Nota: Creando post_url_original desde post_url")
-        df['post_url_original'] = df['post_url'].copy()
-
-    # --- Lógica de listado de pautas ---
-    all_unique_posts = df[['post_url', 'post_url_original', 'platform']].drop_duplicates(subset=['post_url']).copy()
-    all_unique_posts.dropna(subset=['post_url'], inplace=True)
-
-    df_comments = df.dropna(subset=['created_time_colombia', 'comment_text', 'post_url']).copy()
-    df_comments.reset_index(drop=True, inplace=True)
-
-    comment_counts = df_comments.groupby('post_url').size().reset_index(name='comment_count')
-
-    unique_posts = pd.merge(all_unique_posts, comment_counts, on='post_url', how='left')
-    
-    # Fix FutureWarning - use proper pandas syntax
-    unique_posts = unique_posts.copy()
-    unique_posts['comment_count'] = unique_posts['comment_count'].fillna(0)
-    unique_posts['comment_count'] = unique_posts['comment_count'].astype(int)
-    
-    unique_posts.sort_values(by='comment_count', ascending=False, inplace=True)
-    unique_posts.reset_index(drop=True, inplace=True)
-    
-    post_labels = {}
-    for index, row in unique_posts.iterrows():
-        post_labels[row['post_url']] = f"Pauta {index + 1} ({row['platform']})"
-    
-    unique_posts['post_label'] = unique_posts['post_url'].map(post_labels)
-    df_comments['post_label'] = df_comments['post_url'].map(post_labels)
-    
-    all_posts_json = json.dumps(unique_posts.to_dict('records'))
-
-    print("Analizando sentimientos y temas...")
-    sentiment_analyzer = create_analyzer(task="sentiment", lang="es")
-    
-    df_comments['sentimiento'] = df_comments['comment_text'].apply(
-        lambda text: {"POS": "Positivo", "NEG": "Negativo", "NEU": "Neutro"}.get(
-            sentiment_analyzer.predict(str(text)).output, "Neutro"
-        )
-    )
 
 def classify_topic(comment):
     """
     Clasifica un comentario de la campaña "Plus 1" de Alpina en categorías específicas
     basadas en las reacciones y temas predominantes observados en los datos reales.
-    
-    Esta función fue optimizada para capturar mejor los patrones encontrados en 
-    comentarios de pautas publicitarias de Facebook.
     """
-    comment_lower = str(comment).lower()
     # Manejar valores nulos o vacíos
     if pd.isna(comment) or comment is None:
         return 'Sin contenido'
@@ -157,7 +94,6 @@ def classify_topic(comment):
     # --- MENCIÓN DE COMBINACIONES (OBJETIVO DE LA CAMPAÑA) ---
     
     # 8. Mención directa de combinaciones de productos Alpina con comidas típicas
-    # OBJETIVO: Antojar y generar conversación sobre combos
     if re.search(r'con (és[oa]|yaper|la lechuga|melocot[oó]n.*chocorramo)|'
                  r'hacemos lo mismo|pan.*bon[oa]|yogurt.*pan|kumis.*rosc[oó]n|'
                  r'avena.*buñuelo|alpin.*galleta|combo|roscones con|'
@@ -232,6 +168,68 @@ def classify_topic(comment):
     # 17. Si no coincide con ninguna categoría específica
     return 'Otro'
 
+
+def run_report_generation():
+    """
+    Lee los datos del Excel, realiza el análisis de sentimientos y temas,
+    y genera el panel HTML interactivo como 'index.html'.
+    """
+    print("--- INICIANDO GENERACIÓN DE INFORME HTML ---")
+    
+    try:
+        df = pd.read_excel('Comentarios Campaña.xlsx')
+        print("Archivo 'Comentarios Campaña.xlsx' cargado con éxito.")
+    except FileNotFoundError:
+        print("❌ ERROR: No se encontró el archivo 'Comentarios Campaña.xlsx'.")
+        return
+
+    # --- Limpieza y preparación de datos ---
+    df['created_time_processed'] = pd.to_datetime(df['created_time_processed'])
+    df['created_time_colombia'] = df['created_time_processed'] - pd.Timedelta(hours=5)
+
+    # Asegurar que exista post_url_original (para archivos antiguos)
+    if 'post_url_original' not in df.columns:
+        print("⚠️  Nota: Creando post_url_original desde post_url")
+        df['post_url_original'] = df['post_url'].copy()
+
+    # --- Lógica de listado de pautas ---
+    all_unique_posts = df[['post_url', 'post_url_original', 'platform']].drop_duplicates(subset=['post_url']).copy()
+    all_unique_posts.dropna(subset=['post_url'], inplace=True)
+
+    df_comments = df.dropna(subset=['created_time_colombia', 'comment_text', 'post_url']).copy()
+    df_comments.reset_index(drop=True, inplace=True)
+
+    comment_counts = df_comments.groupby('post_url').size().reset_index(name='comment_count')
+
+    unique_posts = pd.merge(all_unique_posts, comment_counts, on='post_url', how='left')
+    
+    # Fix FutureWarning - use proper pandas syntax
+    unique_posts = unique_posts.copy()
+    unique_posts['comment_count'] = unique_posts['comment_count'].fillna(0)
+    unique_posts['comment_count'] = unique_posts['comment_count'].astype(int)
+    
+    unique_posts.sort_values(by='comment_count', ascending=False, inplace=True)
+    unique_posts.reset_index(drop=True, inplace=True)
+    
+    post_labels = {}
+    for index, row in unique_posts.iterrows():
+        post_labels[row['post_url']] = f"Pauta {index + 1} ({row['platform']})"
+    
+    unique_posts['post_label'] = unique_posts['post_url'].map(post_labels)
+    df_comments['post_label'] = df_comments['post_url'].map(post_labels)
+    
+    all_posts_json = json.dumps(unique_posts.to_dict('records'))
+
+    print("Analizando sentimientos y temas...")
+    sentiment_analyzer = create_analyzer(task="sentiment", lang="es")
+    
+    df_comments['sentimiento'] = df_comments['comment_text'].apply(
+        lambda text: {"POS": "Positivo", "NEG": "Negativo", "NEU": "Neutro"}.get(
+            sentiment_analyzer.predict(str(text)).output, "Neutro"
+        )
+    )
+    
+    # IMPORTANTE: Aplicar classify_topic que está definida FUERA de esta función
     df_comments['tema'] = df_comments['comment_text'].apply(classify_topic)
     print("Análisis completado.")
 
@@ -593,11 +591,9 @@ def classify_topic(comment):
     
     print(f"✅ Panel interactivo mejorado generado con éxito. Se guardó como '{report_filename}'.")
 
+
 if __name__ == "__main__":
     run_report_generation()
-
-
-
 
 
 
